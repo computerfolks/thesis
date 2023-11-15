@@ -7,8 +7,8 @@ sys.path.append(parent_dir)
 from query import get_query_result_for_date_range_zip_code
 import json
 from convert_to_dataframe import clean_convert_dictionary_to_dataframe
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import pandas as pd
+from dataframe import aggregate_all_files
 
 def get_weather_bike_data(start_date, end_date, zip_code, output_file):
   """
@@ -41,25 +41,18 @@ def normalize_weather_dataframe(input_json, output_csv):
   # print(weather_dataframe.columns)
   # print(weather_dataframe)
 
-  # clean dataframe
   # remove columns
-  weather_dataframe = weather_dataframe.drop(['start_date', 'end_date', 'winddir', 'severerisk', 'sunrise', 'sunset'], axis=1)
+  weather_dataframe = weather_dataframe.drop(['start_date', 'end_date', 'winddir', 'severerisk', 'sunrise', 'sunset', 'moonphase'], axis=1)
   # rename datetime to date to match bike dataframe
   weather_dataframe = weather_dataframe.rename(columns={'datetime': 'date'})
 
   # define normalization instructions
-  columns_to_standardize = ['daylight', 'tempmax', 'tempmin', 'temp', 'feelslikemax', 'feelslikemin', 'feelslike', 'dew', 'windspeed', 'pressure', 'visibility']
   columns_to_divide_by_100 = ['humidity', 'precipcover', 'cloudcover']
   columns_to_divide_by_10 = ['uvindex']
-  columns_to_min_max_scale = ['precip', 'snow', 'snowdepth']
 
   # normalize
-  scaler_standardize = StandardScaler()
-  scaler_min_max = MinMaxScaler()
-  weather_dataframe[columns_to_standardize] = scaler_standardize.fit_transform(weather_dataframe[columns_to_standardize])
   weather_dataframe[columns_to_divide_by_100] /= 100
   weather_dataframe[columns_to_divide_by_10] /= 10
-  weather_dataframe[columns_to_min_max_scale] = scaler_min_max.fit_transform(weather_dataframe[columns_to_min_max_scale])
 
   # create new feature 'is_work_day'
   weather_dataframe['date'] = pd.to_datetime(weather_dataframe['date'])
@@ -73,7 +66,10 @@ def normalize_weather_dataframe(input_json, output_csv):
 
 
 if __name__ == '__main__':
-  weather_query_output_file = 'ml_processing/weather_raw.json'
-  # get_weather_bike_data('2022-11-01', '2023-10-31', '07310', 'weather_raw.json')
-  weather_normalize_output_file = 'ml_processing/weather_normalized.csv'
-  normalize_weather_dataframe(weather_query_output_file, weather_normalize_output_file)
+  # weather_query_output_file = 'ml_processing/weather_raw_07302.json'
+  # get_weather_bike_data('2023-10-30', '2023-10-31', '07302', 'weather_raw_07302.json')
+  # weather_normalize_output_file = 'ml_processing/weather_normalized_07302.csv'
+  # normalize_weather_dataframe(weather_query_output_file, weather_normalize_output_file)
+  file_list = ['ml_processing/weather_normalized_07302.csv', 'ml_processing/weather_normalized_07030.csv', 'ml_processing/weather_normalized_07310.csv']
+  new_file = 'ml_processing/weather_total_normalized.csv'
+  aggregate_all_files(file_list, new_file)

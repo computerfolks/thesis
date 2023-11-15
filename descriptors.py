@@ -59,5 +59,7 @@ graphable_columns = [
 
 # map start station names to zip codes
 start_stations_to_zips = {
-    'Newport PATH' : '07310'
+    'Newport PATH' : '07310',
+    'South Waterfront Walkway - Sinatra Dr & 1 St' : '07030',
+    'Marin Light Rail' : '07302'
 }

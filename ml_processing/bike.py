@@ -6,6 +6,7 @@ sys.path.append(parent_dir)
 
 import pandas as pd
 from descriptors import start_stations_to_zips
+from dataframe import aggregate_all_files
 
 
 def preaggregation(input_csv, output_csv):
@@ -61,11 +62,14 @@ def feature_extraction(input_csv, output_csv):
   cumulative_stats.columns = ['date', 'total_length', 'number_of_rides', 'zip_code']
   cumulative_stats.to_csv(output_csv, index=False)
 
-
 if __name__ == '__main__':
-  input_csv = 'ml_processing/bike_raw.csv'
-  preaggregation_csv = 'ml_processing/bike_preaggregation.csv'
-  aggregation_csv = 'ml_processing/bike_aggregation.csv'
+  # input_csv = 'ml_processing/bike_raw_07302.csv'
+  # preaggregation_csv = 'ml_processing/bike_preaggregation_07302.csv'
+  # aggregation_csv = 'ml_processing/bike_aggregation_07302.csv'
 
-  preaggregation(input_csv, preaggregation_csv)
-  feature_extraction(preaggregation_csv, aggregation_csv)
+  # preaggregation(input_csv, preaggregation_csv)
+  # feature_extraction(preaggregation_csv, aggregation_csv)
+
+  file_list = ['ml_processing/bike_aggregation_07302.csv', 'ml_processing/bike_aggregation_07030.csv', 'ml_processing/bike_aggregation_07310.csv']
+  new_file = 'ml_processing/bike_total_aggregation.csv'
+  aggregate_all_files(file_list, new_file)
