@@ -1,5 +1,4 @@
 # store dictionary to be imported which maps pandas dataframe column names to English explanation
-
 descriptions_for_column_keys = {
     'start_date': 'Starting date of data',
     'end_date': 'Ending date of data',
@@ -33,6 +32,7 @@ descriptions_for_column_keys = {
     'moonphase': 'Phase of the moon'
 }
 
+# columns that can be graphed by matplotlib
 graphable_columns = [
     'daylight',
     'tempmax',
@@ -57,6 +57,7 @@ graphable_columns = [
     'uvindex',
     'moonphase']
 
+# map start station names to zip codes
 start_stations_to_zips = {
     'Newport PATH' : '07310'
 }

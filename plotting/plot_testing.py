@@ -5,7 +5,6 @@ from plotting.plot_one_metric import plot_metric_by_multiple_intervals, plot_met
 
 user_dict = get_date_range_keys_zip_codes_values_dictionary()
 
-# does this account for the return object being a tuple?
 new_user_query_results = get_query_results_for_date_range_zip_codes_dict(user_dict)
 print(new_user_query_results)
 new_user_dataframe = clean_convert_dictionary_to_dataframe(new_user_query_results)
