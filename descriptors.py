@@ -63,3 +63,8 @@ start_stations_to_zips = {
     'South Waterfront Walkway - Sinatra Dr & 1 St' : '07030',
     'Marin Light Rail' : '07302'
 }
+
+# predictor list for machine learning
+# predictors = ['tempmax','tempmin','temp','feelslikemax','feelslikemin','feelslike','dew','humidity','precip','precipcover','snow','snowdepth','windgust','windspeed','pressure','cloudcover','visibility','solarradiation','solarenergy','uvindex','daylight','is_work_day']
+predictors = ['daylight','is_work_day']
+targets = ['number_of_rides', 'total_length']

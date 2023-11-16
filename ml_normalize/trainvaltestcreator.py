@@ -5,7 +5,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 import pandas as pd
 from descriptors import start_stations_to_zips
 
@@ -22,8 +22,8 @@ def create_train_val_test_dataframes(input_csv, output_prefix = ''):
     train_validation, test = train_test_split(full_dataframe, test_size = 0.2, random_state = 23907251, stratify = full_dataframe['zip_code'])
 
     # save into new csv for each
-    test_csv = 'ml_learning/' + output_prefix + 'test.csv'
-    train_val_csv = 'ml_learning/' + output_prefix + 'train_val.csv'
+    test_csv = 'ml_normalize/' + output_prefix + 'test.csv'
+    train_val_csv = 'ml_normalize/' + output_prefix + 'train_val.csv'
     test.to_csv(test_csv, index=False)
     train_validation.to_csv(train_val_csv, index=False)
 
@@ -68,7 +68,8 @@ def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv):
         zip_code_rows_fit = fit_df[fit_df['zip_code'] == zip_code]
         zip_code_rows_trans = trans_df[trans_df['zip_code'] == zip_code]
 
-        scaler_zip = StandardScaler()
+        # scaler_zip = StandardScaler()
+        scaler_zip = RobustScaler()
 
         # fit and transform fit_df
         fit_df.loc[fit_df['zip_code'] == zip_code, columns_to_zip_standardize] = scaler_zip.fit_transform(zip_code_rows_fit[columns_to_zip_standardize])
@@ -102,15 +103,15 @@ def remove_anomalies_from_train_val(train_val_csv):
 
     # filter and save
     filtered_train_val_df = train_val_df[condition]
-    filtered_train_val_df.to_csv('ml_learning/n_train_val.csv', index=False)
+    filtered_train_val_df.to_csv(train_val_csv, index=False)
 
 if __name__ == '__main__':
-    create_train_val_test_dataframes('ml_learning/dataframe.csv')
+    create_train_val_test_dataframes('ml_normalize/dataframe.csv')
     
-    train_val_csv = 'ml_learning/train_val.csv'
-    test_csv = 'ml_learning/test.csv'
+    train_val_csv = 'ml_normalize/train_val.csv'
+    test_csv = 'ml_normalize/test.csv'
     new_train_val_csv = 'ml_learning/n_train_val.csv'
-    new_test_csv = 'ml_learning/test.csv'
+    new_test_csv = 'ml_learning/n_test.csv'
     fit_and_trans(train_val_csv, test_csv, new_train_val_csv, new_test_csv)
     
-    remove_anomalies_from_train_val(new_train_val_csv)
+    # remove_anomalies_from_train_val(new_train_val_csv)
