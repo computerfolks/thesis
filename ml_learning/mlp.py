@@ -10,59 +10,88 @@ from sklearn.metrics import make_scorer, mean_squared_error, r2_score
 import pandas as pd
 from descriptors import predictors, targets
 
-train_val_df = pd.read_csv('ml_learning/n_train_val.csv', dtype={'zip_code': str})
 
-def average_metric(y_true, y_pred):
-    mse_y1 = mean_squared_error(y_true[:, 0], y_pred[:, 0])
-    mse_y2 = mean_squared_error(y_true[:, 1], y_pred[:, 1])
-    average_mse = (mse_y1 + mse_y2) / 2.0
-    return -average_mse  # Minimize the negative of the average MSE
+def find_optimal_hyperparams(train_val_csv, target):
+    """
+    perform gridsearchcv and find optimal hyperparameters for multilayer perceptron
+    use 'predictors' from descriptors.py for feature columns
 
-def average_r2(y_true, y_pred):
-    r2_y1 = r2_score(y_true[:, 0], y_pred[:, 0])
-    r2_y2 = r2_score(y_true[:, 1], y_pred[:, 1])
-    average_r2 = (r2_y1 + r2_y2) / 2.0
-    return -average_r2  # Minimize the negative of the average R-squared
+    input:
+        train_val_csv: csv where the training / validation combined dataset is located
+        target: the target variable to predict
 
+    output:
+        mlp_hyper_search.best_params_: optimal hyperparameters found in gridsearchcv
+    """
+    # read csv
+    train_val_df = pd.read_csv(train_val_csv, dtype={'zip_code': str})
 
-number_of_hidden_layers = [1, 2, 3, 4, 5]
-number_of_neurons_per_layer = [20, 50, 100, 200]
+    # set scoring, 'r2' and 'neg_mean_squared_error' both available
+    scoring = 'r2'
 
-# number_of_hidden_layers = [1, 2]
-# number_of_neurons_per_layer = [100, 200]
+    # set hyperparameters to search through
+    number_of_hidden_layers = [1, 2, 3, 4, 5]
+    number_of_neurons_per_layer = [2, 5, 10, 20, 50, 100, 200, 400]
 
-hidden_layer_sizes = []
-for layers in number_of_hidden_layers:
-    for neurons in number_of_neurons_per_layer:
-        layer_size = tuple([neurons] * layers)
-        hidden_layer_sizes.append(layer_size)
+    # formulate hidden layer sizes in proper format
+    hidden_layer_sizes = []
+    for layers in number_of_hidden_layers:
+        for neurons in number_of_neurons_per_layer:
+            layer_size = tuple([neurons] * layers)
+            hidden_layer_sizes.append(layer_size)
 
+    # define hyper param space
+    hyper_param_space = {
+        'hidden_layer_sizes': hidden_layer_sizes,
+        'learning_rate_init':  [0.00001, 0.0001, 0.001, 0.01, 0.1, 0.5]
+    }
 
-# Define the scoring function (you can choose either MSE or r2_score)
-# Using make_scorer to convert metrics into a scorer object
-scoring = {
-    'mse_y1': make_scorer(mean_squared_error, greater_is_better=False),
-    'mse_y2': make_scorer(mean_squared_error, greater_is_better=False),
-    'r2_y1': make_scorer(r2_score),
-    'r2_y2': make_scorer(r2_score),
-}
+    mlp = MLPRegressor(random_state=23907251, max_iter=40000, early_stopping = True)
+    mlp_hyper_search = GridSearchCV(
+        estimator = mlp,
+        param_grid = hyper_param_space,
+        cv = 5,
+        n_jobs = -1,
+        scoring = scoring,
+        return_train_score = False
+    ) 
+    mlp_hyper_search.fit(train_val_df[predictors], train_val_df[target])
+    print(f"Highest scoring hyperparams: {mlp_hyper_search.best_params_} with score: {mlp_hyper_search.best_score_}")
 
-mlp = MLPRegressor(random_state=23907251, max_iter=40000, early_stopping = True)
+    return mlp_hyper_search.best_params_
 
-hyper_param_space = {
-    'hidden_layer_sizes': hidden_layer_sizes,
-    'learning_rate_init':  [0.00001, 0.0001, 0.001, 0.01, 0.1, 0.5]
-}
+def mlp_predict(train_csv, val_csv, target, hyperparams=None):
+    """
+    build and predict using mlp. use predetermined hyperparameters
 
-mlp_hyper_search = GridSearchCV(
-    estimator = mlp,
-    param_grid = hyper_param_space,
-    cv = 5,
-    n_jobs = -1,
-    scoring = 'r2',
-    return_train_score = False
-) 
+    input:
+        train_csv: file that has the training data
+        val_csv: file that has the validation data
+        target: variable to predict
+    
+    output:
+        r2 score between predictions and actual values for validation dataset
+    """
+    train_df = pd.read_csv(train_csv, dtype={'zip_code': str})
+    val_df = pd.read_csv(val_csv, dtype={'zip_code': str})
 
-mlp_hyper_search.fit(train_val_df[predictors], train_val_df['number_of_rides'])
+    # either use hyperparams search, or if it was already performed, use values found from previous search that were manually written in
+    if hyperparams is not None:
+        hidden_layer_sizes = hyperparams['hidden_layer_sizes']
+        learning_rate_init = hyperparams['learning_rate_init']
+    else:
+        hidden_layer_sizes = (200, 200, 200, 200, 200)
+        learning_rate_init = 0.001
+    
+    
+    regr = MLPRegressor(random_state=23907251, max_iter=40000, hidden_layer_sizes=hidden_layer_sizes, learning_rate_init=learning_rate_init)
+    regr.fit(train_df[predictors], train_df[target])
+    val_df_target_actual = val_df[target]
+    print(regr.score(val_df[predictors], val_df_target_actual))
 
-print(f"Highest scoring hyperparams: {mlp_hyper_search.best_params_} with score: {mlp_hyper_search.best_score_}")
+if __name__ == '__main__':
+    train_val_csv = 'ml_learning/n_train_val.csv'
+    hyperparams = find_optimal_hyperparams(train_val_csv, 'number_of_rides')
+    train_csv = 'ml_learning/n_train.csv'
+    val_csv = 'ml_learning/n_val.csv'
+    mlp_predict(train_csv, val_csv, 'number_of_rides', hyperparams)
