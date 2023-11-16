@@ -10,7 +10,7 @@ import pandas as pd
 from descriptors import start_stations_to_zips
 
 
-def create_trainval_test_dataframes(input_csv, output_prefix = ''):
+def split_dataframes(input_csv, output_prefix = ''):
     """
     transform full dataframe at location input_csv into train_val and test dataframes
     output_prefix can optionally prepend to the generic csv names
@@ -20,12 +20,22 @@ def create_trainval_test_dataframes(input_csv, output_prefix = ''):
 
     # 0.8 into train_val, 0.2 into test
     train_validation, test = train_test_split(full_dataframe, test_size = 0.2, random_state = 23907251, stratify = full_dataframe['zip_code'])
+    
+    # 0.75 into train, 0.25 into val
+    train, validation = train_test_split(train_validation, test_size = 0.25, random_state = 23907251, stratify = train_validation['zip_code'])
 
     # save into new csv for each
     test_csv = 'ml_normalize/' + output_prefix + 'test.csv'
     train_val_csv = 'ml_normalize/' + output_prefix + 'train_val.csv'
+    train_csv = 'ml_normalize/' + output_prefix + 'train.csv'
+    val_csv = 'ml_normalize/' + output_prefix + 'val.csv'
+
+
+
     test.to_csv(test_csv, index=False)
     train_validation.to_csv(train_val_csv, index=False)
+    train.to_csv(train_csv, index=False)
+    validation.to_csv(val_csv, index=False)
 
 
 def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv):
@@ -81,7 +91,7 @@ def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv):
     fit_df.to_csv(new_fit_csv, index=False)
     trans_df.to_csv(new_trans_csv, index=False)
 
-def remove_anomalies_from_train_val(train_val_csv):
+def remove_anomalies(train_val_csv):
     """
     remove anomalies in-place for train_val_csv
     anomaly threshold can be changed, currently defined as anything with target feature >= 4 z-score
@@ -106,34 +116,44 @@ def remove_anomalies_from_train_val(train_val_csv):
     filtered_train_val_df = train_val_df[condition]
     filtered_train_val_df.to_csv(train_val_csv, index=False)
 
-def create_train_val_dataframes(train_val_csv, output_prefix = ''):
-    """
-    split train_val into train and val dataframes
+# def create_train_val_dataframes(train_val_csv, output_prefix = ''):
+#     """
+#     split train_val into train and val dataframes
 
-    input:
-        train_val_csv: file with train / validation combined dataframe
-        output_prefix (optional): prepend to the generic csv names
+#     input:
+#         train_val_csv: file with train / validation combined dataframe
+#         output_prefix (optional): prepend to the generic csv names
     
-    output:
-        new train, val csvs with separate dataframes
-    """
-    train_val_df = pd.read_csv(train_val_csv, dtype={'zip_code': str})
-    # 0.75 into train, 0.25 into val
-    train, validation = train_test_split(train_val_df, test_size = 0.25, random_state = 23907251, stratify = train_val_df['zip_code'])
+#     output:
+#         new train, val csvs with separate dataframes
+#     """
+#     train_val_df = pd.read_csv(train_val_csv, dtype={'zip_code': str})
+#     # 0.75 into train, 0.25 into val
+#     train, validation = train_test_split(train_val_df, test_size = 0.25, random_state = 23907251, stratify = train_val_df['zip_code'])
 
-    train_csv = 'ml_learning/' + output_prefix + 'n_train.csv'
-    val_csv = 'ml_learning/' + output_prefix + 'n_val.csv'
-    train.to_csv(train_csv, index=False)
-    validation.to_csv(val_csv, index=False)
+#     train_csv = 'ml_learning/' + output_prefix + 'n_train.csv'
+#     val_csv = 'ml_learning/' + output_prefix + 'n_val.csv'
+#     train.to_csv(train_csv, index=False)
+#     validation.to_csv(val_csv, index=False)
 
 
 if __name__ == '__main__':
-    # create_train_val_test_dataframes('ml_normalize/dataframe.csv')
+    split_dataframes('ml_normalize/dataframe.csv')
     
-    # train_val_csv = 'ml_normalize/train_val.csv'
-    # test_csv = 'ml_normalize/test.csv'
+    train_val_csv = 'ml_normalize/train_val.csv'
+    test_csv = 'ml_normalize/test.csv'
+    train_csv = 'ml_normalize/train.csv'
+    val_csv = 'ml_normalize/val.csv'
+    
     new_train_val_csv = 'ml_learning/n_train_val.csv'
-    # new_test_csv = 'ml_learning/n_test.csv'
-    # fit_and_trans(train_val_csv, test_csv, new_train_val_csv, new_test_csv)
-    # remove_anomalies_from_train_val(new_train_val_csv)
-    create_train_val_dataframes(new_train_val_csv)
+    new_test_csv = 'ml_learning/n_test.csv'
+    new_train_csv = 'ml_learning/n_train.csv'
+    new_val_csv = 'ml_learning/n_val.csv'
+
+    # fit on train/val, transform on testing for when final testing is performed
+    fit_and_trans(train_val_csv, test_csv, new_train_val_csv, new_test_csv)
+    remove_anomalies(new_train_val_csv)
+
+    # fit on train, transform on val to prevent data leakage during training and tuning based on val performance
+    fit_and_trans(train_csv, val_csv, new_train_csv, new_val_csv)
+    remove_anomalies(new_train_csv)

@@ -24,5 +24,5 @@ def rf_predict(target):
     print(rf.score(x_val, y_val))
 
 if __name__ == '__main__':
-    rf_predict('number_of_rides')
+    rf_predict('total_length')
     

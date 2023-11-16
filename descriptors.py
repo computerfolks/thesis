@@ -65,6 +65,7 @@ start_stations_to_zips = {
 }
 
 # predictor list for machine learning
-predictors = ['tempmax','tempmin','temp','feelslikemax','feelslikemin','feelslike','dew','humidity','precip','precipcover','snow','snowdepth','windgust','windspeed','pressure','cloudcover','visibility','solarradiation','solarenergy','uvindex','daylight','is_work_day']
-# predictors = ['temp','humidity','precip','snow','windspeed','pressure','cloudcover','visibility','daylight','is_work_day']
+# predictors = ['tempmax','tempmin','temp','feelslikemax','feelslikemin','feelslike','dew','humidity','precip','precipcover','snow','snowdepth','windgust','windspeed','pressure','cloudcover','visibility','solarradiation','solarenergy','uvindex','daylight','is_work_day']
+# predictors = ['temp','humidity','precip','snow','windspeed','pressure','cloudcover','visibility','daylight']
+predictors = ['daylight','is_work_day']
 targets = ['number_of_rides', 'total_length']
