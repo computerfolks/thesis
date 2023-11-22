@@ -63,13 +63,13 @@ def feature_extraction(input_csv, output_csv):
   cumulative_stats.to_csv(output_csv, index=False)
 
 if __name__ == '__main__':
-  # input_csv = 'ml_processing/bike_raw_07302.csv'
-  # preaggregation_csv = 'ml_processing/bike_preaggregation_07302.csv'
-  # aggregation_csv = 'ml_processing/bike_aggregation_07302.csv'
+  # input_csv = 'ml_preprocessing/bike_raw_07302.csv'
+  # preaggregation_csv = 'ml_preprocessing/bike_preaggregation_07302.csv'
+  # aggregation_csv = 'ml_preprocessing/bike_aggregation_07302.csv'
 
   # preaggregation(input_csv, preaggregation_csv)
   # feature_extraction(preaggregation_csv, aggregation_csv)
 
-  file_list = ['ml_processing/bike_aggregation_07302.csv', 'ml_processing/bike_aggregation_07030.csv', 'ml_processing/bike_aggregation_07310.csv']
-  new_file = 'ml_processing/bike_total_aggregation.csv'
+  file_list = ['ml_preprocessing/bike_aggregation_07302.csv', 'ml_preprocessing/bike_aggregation_07030.csv', 'ml_preprocessing/bike_aggregation_07310.csv']
+  new_file = 'ml_preprocessing/bike_total_aggregation.csv'
   aggregate_all_files(file_list, new_file)

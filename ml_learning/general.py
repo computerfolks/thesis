@@ -1,7 +1,12 @@
+import sys
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
 import pandas as pd
 from sklearn.model_selection import GridSearchCV
 from descriptors import scoring, predictors
-
 
 def find_optimal_hyperparams(train_val_csv, target, hyper_param_space, initialized_model):
     """

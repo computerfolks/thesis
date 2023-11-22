@@ -65,9 +65,11 @@ start_stations_to_zips = {
 }
 
 # predictor list for machine learning
-predictors = ['tempmax','tempmin','temp','feelslikemax','feelslikemin','feelslike','dew','humidity','precip','precipcover','snow','snowdepth','windgust','windspeed','pressure','cloudcover','visibility','solarradiation','solarenergy','uvindex','daylight','is_work_day']
-# predictors = ['temp','humidity','precip','snow','snowdepth','windspeed','pressure','cloudcover','visibility','daylight']
-# predictors = ['daylight','is_work_day']
+all_predictors = ['tempmax','tempmin','temp','feelslikemax','feelslikemin','feelslike','dew','humidity','precip','precipcover','snow','snowdepth','windgust','windspeed','pressure','cloudcover','visibility','solarradiation','solarenergy','uvindex','daylight','is_work_day']
+domain_predictors = ['temp','humidity','precip','snow','snowdepth','windspeed','pressure','cloudcover','visibility','daylight', 'is_work_day']
+baseline_predictors = ['daylight','is_work_day']
+selection_predictors = ['temp','precip','precipcover','windspeed','cloudcover','visibility','uvindex','daylight']
+predictors = selection_predictors
 
 targets = ['number_of_rides', 'total_length']
 target = 'number_of_rides'
@@ -75,6 +77,5 @@ target = 'number_of_rides'
 # random seed for training
 random_seed = 23907251
 
-# scoring system, can be 'r2' or 'neg_mean_squared_error', among others. To see full list, put in a random string and 
-# allowed values will be printed to terminal
+# scoring system, can be 'r2' or 'neg_mean_squared_error', among others. To see full list, put in a random string and allowed values will be printed to terminal
 scoring = 'r2'

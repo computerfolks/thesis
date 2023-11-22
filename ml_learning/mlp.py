@@ -78,9 +78,9 @@ def mlp_predict(train_csv, val_csv, target, hyperparams=None):
     return score
 
 if __name__ == '__main__':
-    train_val_csv = 'ml_learning/n_train_val.csv'
+    train_val_csv = 'ml_learning/n_fs_train_val.csv'
     hyperparams = find_mlp_optimal_hyperparams(train_val_csv, 'number_of_rides')
-    train_csv = 'ml_learning/n_train.csv'
-    val_csv = 'ml_learning/n_val.csv'
+    train_csv = 'ml_learning/n_fs_train.csv'
+    val_csv = 'ml_learning/n_fs_val.csv'
     score = mlp_predict(train_csv, val_csv, 'number_of_rides', hyperparams)
     print(score)

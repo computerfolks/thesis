@@ -16,8 +16,8 @@ def aggregate_all_files(file_list, new_file):
 if __name__ == '__main__':
 
     # load bike and weather dataframes
-    bike_file = 'ml_processing/bike_total_aggregation.csv'
-    weather_file = 'ml_processing/weather_total_normalized.csv'
+    bike_file = 'ml_preprocessing/bike_total_aggregation.csv'
+    weather_file = 'ml_preprocessing/weather_total_normalized.csv'
     dataframe_bike = pd.read_csv(bike_file, dtype={'zip_code': str})
     dataframe_weather = pd.read_csv(weather_file, dtype={'zip_code': str})
 
@@ -26,5 +26,5 @@ if __name__ == '__main__':
     merged_dataframe = merged_dataframe.dropna()
 
     # save to csv
-    merged_dataframe.to_csv('ml_learning/dataframe.csv', index=False)
+    merged_dataframe.to_csv('ml_normalize/dataframe.csv', index=False)
     print(merged_dataframe)

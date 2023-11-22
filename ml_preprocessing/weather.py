@@ -66,10 +66,10 @@ def normalize_weather_dataframe(input_json, output_csv):
 
 
 if __name__ == '__main__':
-  # weather_query_output_file = 'ml_processing/weather_raw_07302.json'
+  # weather_query_output_file = 'ml_preprocessing/weather_raw_07302.json'
   # get_weather_bike_data('2023-10-30', '2023-10-31', '07302', 'weather_raw_07302.json')
-  # weather_normalize_output_file = 'ml_processing/weather_normalized_07302.csv'
+  # weather_normalize_output_file = 'ml_preprocessing/weather_normalized_07302.csv'
   # normalize_weather_dataframe(weather_query_output_file, weather_normalize_output_file)
-  file_list = ['ml_processing/weather_normalized_07302.csv', 'ml_processing/weather_normalized_07030.csv', 'ml_processing/weather_normalized_07310.csv']
-  new_file = 'ml_processing/weather_total_normalized.csv'
+  file_list = ['ml_preprocessing/weather_normalized_07302.csv', 'ml_preprocessing/weather_normalized_07030.csv', 'ml_preprocessing/weather_normalized_07310.csv']
+  new_file = 'ml_preprocessing/weather_total_normalized.csv'
   aggregate_all_files(file_list, new_file)
