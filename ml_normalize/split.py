@@ -7,7 +7,7 @@ sys.path.append(parent_dir)
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 import pandas as pd
-from descriptors import start_stations_to_zips
+from descriptors import start_stations_to_zips, random_seed
 
 
 def split_dataframes(input_csv, output_prefix = ''):
@@ -19,10 +19,10 @@ def split_dataframes(input_csv, output_prefix = ''):
     full_dataframe = pd.read_csv(input_csv, dtype={'zip_code': str})
 
     # 0.8 into train_val, 0.2 into test
-    train_validation, test = train_test_split(full_dataframe, test_size = 0.2, random_state = 23907251, stratify = full_dataframe['zip_code'])
+    train_validation, test = train_test_split(full_dataframe, test_size = 0.2, random_state = random_seed, stratify = full_dataframe['zip_code'])
     
     # 0.75 into train, 0.25 into val
-    train, validation = train_test_split(train_validation, test_size = 0.25, random_state = 23907251, stratify = train_validation['zip_code'])
+    train, validation = train_test_split(train_validation, test_size = 0.25, random_state = random_seed, stratify = train_validation['zip_code'])
 
     # save into new csv for each
     test_csv = 'ml_normalize/' + output_prefix + 'test.csv'
@@ -115,26 +115,6 @@ def remove_anomalies(train_val_csv):
     # filter and save
     filtered_train_val_df = train_val_df[condition]
     filtered_train_val_df.to_csv(train_val_csv, index=False)
-
-# def create_train_val_dataframes(train_val_csv, output_prefix = ''):
-#     """
-#     split train_val into train and val dataframes
-
-#     input:
-#         train_val_csv: file with train / validation combined dataframe
-#         output_prefix (optional): prepend to the generic csv names
-    
-#     output:
-#         new train, val csvs with separate dataframes
-#     """
-#     train_val_df = pd.read_csv(train_val_csv, dtype={'zip_code': str})
-#     # 0.75 into train, 0.25 into val
-#     train, validation = train_test_split(train_val_df, test_size = 0.25, random_state = 23907251, stratify = train_val_df['zip_code'])
-
-#     train_csv = 'ml_learning/' + output_prefix + 'n_train.csv'
-#     val_csv = 'ml_learning/' + output_prefix + 'n_val.csv'
-#     train.to_csv(train_csv, index=False)
-#     validation.to_csv(val_csv, index=False)
 
 
 if __name__ == '__main__':
