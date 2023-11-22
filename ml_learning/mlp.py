@@ -8,11 +8,12 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import make_scorer, mean_squared_error, r2_score
 import pandas as pd
-from descriptors import predictors, targets, random_seed
+from descriptors import selection_predictors, targets, random_seed
 from general import find_optimal_hyperparams, predict
 
+predictors = selection_predictors
 
-def find_mlp_optimal_hyperparams(train_val_csv, target):
+def find_mlp_optimal_hyperparams(train_val_csv, target, predictors):
     """
     specify conditions for multilayer perceptron gridsearchcv
     utilize generic 'find_optimal_hyperparams' for search
@@ -45,10 +46,10 @@ def find_mlp_optimal_hyperparams(train_val_csv, target):
     mlp = MLPRegressor(random_state=random_seed, max_iter=40000, early_stopping = True)
 
     # call on generic hyperparam search
-    best_params = find_optimal_hyperparams(train_val_csv, target, hyper_param_space, mlp)
+    best_params = find_optimal_hyperparams(train_val_csv, target, hyper_param_space, mlp, predictors)
     return best_params
 
-def mlp_predict(train_csv, val_csv, target, hyperparams=None):
+def mlp_predict(train_csv, val_csv, target, predictors, hyperparams=None):
     """
     specify conditions for multilayer perceptron prediction
     utilize generic 'predict' for prediction
@@ -74,13 +75,13 @@ def mlp_predict(train_csv, val_csv, target, hyperparams=None):
     # define initial model
     regr = MLPRegressor(random_state=random_seed, max_iter=40000, hidden_layer_sizes=hidden_layer_sizes, learning_rate_init=learning_rate_init)
     
-    score = predict(train_csv, val_csv, target, regr)
+    score = predict(train_csv, val_csv, target, regr, predictors)
     return score
 
 if __name__ == '__main__':
     train_val_csv = 'ml_learning/n_fs_train_val.csv'
-    hyperparams = find_mlp_optimal_hyperparams(train_val_csv, 'number_of_rides')
+    hyperparams = find_mlp_optimal_hyperparams(train_val_csv, 'number_of_rides', predictors)
     train_csv = 'ml_learning/n_fs_train.csv'
     val_csv = 'ml_learning/n_fs_val.csv'
-    score = mlp_predict(train_csv, val_csv, 'number_of_rides', hyperparams)
+    score = mlp_predict(train_csv, val_csv, 'number_of_rides', predictors, hyperparams)
     print(score)

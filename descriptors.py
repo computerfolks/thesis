@@ -69,7 +69,6 @@ all_predictors = ['tempmax','tempmin','temp','feelslikemax','feelslikemin','feel
 domain_predictors = ['temp','humidity','precip','snow','snowdepth','windspeed','pressure','cloudcover','visibility','daylight', 'is_work_day']
 baseline_predictors = ['daylight','is_work_day']
 selection_predictors = ['temp','precip','precipcover','windspeed','cloudcover','visibility','uvindex','daylight']
-predictors = selection_predictors
 
 targets = ['number_of_rides', 'total_length']
 target = 'number_of_rides'

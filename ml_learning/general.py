@@ -6,9 +6,10 @@ sys.path.append(parent_dir)
 
 import pandas as pd
 from sklearn.model_selection import GridSearchCV
-from descriptors import scoring, predictors
+from descriptors import scoring
+import pickle
 
-def find_optimal_hyperparams(train_val_csv, target, hyper_param_space, initialized_model):
+def find_optimal_hyperparams(train_val_csv, target, hyper_param_space, initialized_model, predictors):
     """
     generic function to perform gridsearchcv and find optimal hyperparameters for initialized_model
     use 'predictors' from descriptors.py for feature columns
@@ -40,7 +41,7 @@ def find_optimal_hyperparams(train_val_csv, target, hyper_param_space, initializ
     return hyper_search.best_params_
 
 
-def predict(train_csv, val_csv, target, initialized_model):
+def predict(train_csv, val_csv, target, initialized_model, predictors):
     """
     generic function to train and predict a target variable given an initialized model (with hyperparams already specified) ready to be trained / fit
     use 'predictors' from descriptors.py for feature columns
@@ -59,6 +60,9 @@ def predict(train_csv, val_csv, target, initialized_model):
     x_train = train_df[predictors]
     y_train = train_df[target]
     initialized_model.fit(x_train, y_train)
+
+    # with open('ml_learning/model.pkl', 'wb') as file:
+    #     pickle.dump(initialized_model, file)
 
     x_val = val_df[predictors]
     y_val = val_df[target]

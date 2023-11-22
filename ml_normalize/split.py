@@ -24,16 +24,21 @@ def split_dataframes(input_csv, output_prefix = ''):
     # 0.75 into train, 0.25 into val
     train, validation = train_test_split(train_validation, test_size = 0.25, random_state = random_seed, stratify = train_validation['zip_code'])
 
-    # for feature selection: 0.9 into train_val, 0.1 into tune
-    fs_train_val, fs_tune = train_test_split(train_validation, test_size = 0.1, random_state = random_seed, stratify = train_validation['zip_code'])
-    # 0.75 into train, 0.25 into val
-    fs_train, fs_val = train_test_split(fs_train_val, test_size = 0.1, random_state = random_seed, stratify = fs_train_val['zip_code'])
-
     # save into new csv for each
     test_csv = 'ml_normalize/' + output_prefix + 'test.csv'
     train_val_csv = 'ml_normalize/' + output_prefix + 'train_val.csv'
     train_csv = 'ml_normalize/' + output_prefix + 'train.csv'
     val_csv = 'ml_normalize/' + output_prefix + 'val.csv'
+
+    test.to_csv(test_csv, index=False)
+    train_validation.to_csv(train_val_csv, index=False)
+    train.to_csv(train_csv, index=False)
+    validation.to_csv(val_csv, index=False)
+
+    # for feature selection: 0.9 into train_val, 0.1 into tune
+    fs_train_val, fs_tune = train_test_split(train_validation, test_size = 0.1, random_state = random_seed, stratify = train_validation['zip_code'])
+    # 0.75 into train, 0.25 into val
+    fs_train, fs_val = train_test_split(fs_train_val, test_size = 0.1, random_state = random_seed, stratify = fs_train_val['zip_code'])
 
     # feature selection
     fs_tune_csv = 'ml_normalize/' + output_prefix + 'fs_tune.csv'
@@ -41,12 +46,6 @@ def split_dataframes(input_csv, output_prefix = ''):
     fs_train_csv = 'ml_normalize/' + output_prefix + 'fs_train.csv'
     fs_val_csv = 'ml_normalize/' + output_prefix + 'fs_val.csv'
 
-    test.to_csv(test_csv, index=False)
-    train_validation.to_csv(train_val_csv, index=False)
-    train.to_csv(train_csv, index=False)
-    validation.to_csv(val_csv, index=False)
-
-    # feature selection
     fs_tune.to_csv(fs_tune_csv, index=False)
     fs_train_val.to_csv(fs_train_val_csv, index=False)
     fs_train.to_csv(fs_train_csv, index=False)

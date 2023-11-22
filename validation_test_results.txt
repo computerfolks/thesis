@@ -1,0 +1,32 @@
+Baseline MultiLayer Perceptron: 0.4166724458522837
+Baseline Elastic Net Regression: 0.36069035908659997
+Baseline LASSO Regression: 0.3606207155301153
+Baseline Ridge Regression: 0.3606201098617432
+Baseline Huber Regression: 0.35699321789409444
+Baseline Classical Linear Regression: 0.3602301243527727
+Baseline Linear Support Vector: 0.33863414845629014
+Baseline Random Forest: 0.4259096844321312
+Feature Selection MultiLayer Perceptron: 0.7659714464567782
+Feature Selection Elastic Net Regression: 0.7529387237197714
+Feature Selection LASSO Regression: 0.752667425537465
+Feature Selection Ridge Regression: 0.7551952901750933
+Feature Selection Huber Regression: 0.7630073649656002
+Feature Selection Classical Linear Regression: 0.7548088827490389
+Feature Selection Linear Support Vector: 0.764881514451925
+Feature Selection Random Forest: 0.7741139456682429
+All Features MultiLayer Perceptron: 0.6697604502025061
+All Features Elastic Net Regression: 0.6668855586713974
+All Features LASSO Regression: 0.6657972254693867
+All Features Ridge Regression: 0.6665562525283228
+All Features Huber Regression: 0.6609538816562647
+All Features Classical Linear Regression: 0.6663982913837853
+All Features Linear Support Vector: 0.6619744273454641
+All Features Random Forest: 0.6890171057344263
+Domain Expert MultiLayer Perceptron: 0.6591557728090749
+Domain Expert Elastic Net Regression: 0.6339821575490894
+Domain Expert LASSO Regression: 0.6339698625689049
+Domain Expert Ridge Regression: 0.6335258502705674
+Domain Expert Huber Regression: 0.6254054131680842
+Domain Expert Classical Linear Regression: 0.6349384250070905
+Domain Expert Linear Support Vector: 0.6185021326970251
+Domain Expert Random Forest: 0.6733344152069685
