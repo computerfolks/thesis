@@ -1,10 +1,5 @@
 import sys
-import os
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
-
+sys.path.append(".")
 from descriptors import all_predictors, domain_predictors, baseline_predictors, selection_predictors, random_seed
 from mlp import find_mlp_optimal_hyperparams, mlp_predict
 from sklearn.linear_model import ElasticNet, Ridge, Lasso, HuberRegressor, LinearRegression

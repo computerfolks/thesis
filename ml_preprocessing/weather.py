@@ -1,9 +1,5 @@
 import sys
-import os
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
-
+sys.path.append(".")
 from query import get_query_result_for_date_range_zip_code
 import json
 from convert_to_dataframe import clean_convert_dictionary_to_dataframe

@@ -1,13 +1,10 @@
 import sys
-import os
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
-
+sys.path.append(".")
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 import pandas as pd
 from descriptors import start_stations_to_zips, random_seed
+import pickle
 
 
 def split_dataframes(input_csv, output_prefix = ''):
@@ -52,7 +49,7 @@ def split_dataframes(input_csv, output_prefix = ''):
     fs_val.to_csv(fs_val_csv, index=False)
 
 
-def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv):
+def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv, real_example=False):
     """
     use fit_df to fit standardizers, transform both fit_df and trans_df
 
@@ -80,29 +77,60 @@ def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv):
     fit_df[columns_to_min_max_scale] = scaler_min_max.transform(fit_df[columns_to_min_max_scale])
     trans_df[columns_to_min_max_scale] = scaler_min_max.transform(trans_df[columns_to_min_max_scale])
 
-    # target features need to be standardized each on their own zip code
-    # to accommadate for some stations always having larger number of rides and minutes
-    # possibly due to more bikes at that station, more foot traffic, etc
-    columns_to_zip_standardize = ['total_length', 'number_of_rides']
-    zip_codes = start_stations_to_zips.values()
+    if real_example:
+        columns_to_zip_standardize = ['number_of_rides']
+        zip_codes = start_stations_to_zips.values()
 
-    for zip_code in zip_codes:
-        # get rows to standardize
-        zip_code_rows_fit = fit_df[fit_df['zip_code'] == zip_code]
-        zip_code_rows_trans = trans_df[trans_df['zip_code'] == zip_code]
+        for zip_code in zip_codes:
+            # get rows to standardize
+            zip_code_rows_fit = fit_df[fit_df['zip_code'] == zip_code]
 
-        # scaler_zip = StandardScaler()
-        # I tried using standardscaler but got back awful results, switched to robustscaler and performance significantly improved
-        scaler_zip = RobustScaler()
+            # scaler_zip = StandardScaler()
+            # I tried using standardscaler but got back awful results, switched to robustscaler and performance significantly improved
+            scaler_zip = RobustScaler()
 
-        # fit and transform fit_df
-        fit_df.loc[fit_df['zip_code'] == zip_code, columns_to_zip_standardize] = scaler_zip.fit_transform(zip_code_rows_fit[columns_to_zip_standardize])
+            # fit and transform fit_df
+            fit_df.loc[fit_df['zip_code'] == zip_code, columns_to_zip_standardize] = scaler_zip.fit_transform(zip_code_rows_fit[columns_to_zip_standardize])
 
-        # transform trans_df
-        trans_df.loc[trans_df['zip_code'] == zip_code, columns_to_zip_standardize] = scaler_zip.transform(zip_code_rows_trans[columns_to_zip_standardize])
+            # save output for when real examples are encountered in future
+            with open(f'complete_testing/robust_scaler_{zip_code}.pkl', 'wb') as file:
+                pickle.dump(scaler_zip, file)
+                print("success")
+    else:
+        # target features need to be standardized each on their own zip code
+        # to accommadate for some stations always having larger number of rides and minutes
+        # possibly due to more bikes at that station, more foot traffic, etc
+        columns_to_zip_standardize = ['total_length', 'number_of_rides']
+        zip_codes = start_stations_to_zips.values()
 
-    fit_df.to_csv(new_fit_csv, index=False)
-    trans_df.to_csv(new_trans_csv, index=False)
+        for zip_code in zip_codes:
+            # get rows to standardize
+            zip_code_rows_fit = fit_df[fit_df['zip_code'] == zip_code]
+            zip_code_rows_trans = trans_df[trans_df['zip_code'] == zip_code]
+
+            # scaler_zip = StandardScaler()
+            # I tried using standardscaler but got back awful results, switched to robustscaler and performance significantly improved
+            scaler_zip = RobustScaler()
+
+            # fit and transform fit_df
+            fit_df.loc[fit_df['zip_code'] == zip_code, columns_to_zip_standardize] = scaler_zip.fit_transform(zip_code_rows_fit[columns_to_zip_standardize])
+
+            # save output for when real examples are encountered in future
+            with open('complete_testing/robust_scaler.pkl', 'wb') as file:
+                pickle.dump(scaler_zip, file)
+                print("success")
+
+            # transform trans_df
+            trans_df.loc[trans_df['zip_code'] == zip_code, columns_to_zip_standardize] = scaler_zip.transform(zip_code_rows_trans[columns_to_zip_standardize])
+
+    if new_fit_csv is not None:
+        fit_df.to_csv(new_fit_csv, index=False)
+    if new_trans_csv is not None:
+        trans_df.to_csv(new_trans_csv, index=False)
+    print("IN SPLIT")
+    print(fit_df)
+    print(trans_df)
+    return trans_df
 
 def remove_anomalies(train_val_csv):
     """

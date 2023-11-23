@@ -1,9 +1,5 @@
 import sys
-import os
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
-
+sys.path.append(".")
 from user.dates import collect_valid_start_and_end, days_between_dates, collect_valid_date, calc_end_date_from_start_date_and_interval_length, is_valid_date
 from user.zips import collect_valid_zip_code_list
 

@@ -1,9 +1,5 @@
 import sys
-import os
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
-
+sys.path.append(".")
 from sklearn.ensemble import RandomForestRegressor
 from descriptors import random_seed, baseline_predictors, selection_predictors, domain_predictors
 from general import predict

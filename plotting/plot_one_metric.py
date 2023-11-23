@@ -1,3 +1,5 @@
+import sys
+sys.path.append(".")
 import matplotlib.pyplot as plt
 import pandas as pd
 from plotting.test_dictionary_pre_dataframe import test_dictionary_one, test_dictionary_two, test_dictionary_three, test_dictionary_four, test_dictionary_five, test_dictionary_six

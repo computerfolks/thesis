@@ -1,3 +1,5 @@
+import sys
+sys.path.append(".")
 import pandas as pd
 
 def aggregate_all_files(file_list, new_file):

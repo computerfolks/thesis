@@ -29,7 +29,9 @@ descriptions_for_column_keys = {
     'severerisk': 'Risk of severe weather',
     'sunrise': 'Time of sunrise',
     'sunset': 'Time of sunset',
-    'moonphase': 'Phase of the moon'
+    'moonphase': 'Phase of the moon',
+    'number_of_rides': 'Predicted number of citiBike rides',
+    'zscore_percentile': 'Percentile score for expected activity'
 }
 
 # columns that can be graphed by matplotlib
