@@ -29,7 +29,6 @@ def is_valid_date(raw_date_string):
     date_format = "%Y-%m-%d"
     try:
         input_date = datetime.strptime(raw_date_string, date_format).date()
-        present_date = date.today()
 
         # max_date is 14 days ahead, since that is the limit of some metrics being predicted
         max_date = date.today() + timedelta(days=14)

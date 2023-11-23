@@ -1,4 +1,11 @@
+import sys
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
 import json
+from descriptors import start_stations_to_zips
 
 def ask_user_for_zip_code_list():
     """
@@ -7,7 +14,9 @@ def ask_user_for_zip_code_list():
     output:
         raw_zip_code_list_string: raw input provided by the user
     """
-    raw_zip_code_list_string = input(f"Please enter list of US 5-digit zip codes separated by commas (ex. '12345,54321,77777'): ")
+    print("Please note that only the following zip codes have bike data available:")
+    print(start_stations_to_zips.values())
+    raw_zip_code_list_string = input(f"Please enter list of US 5-digit zip codes separated by commas (ex. '12345,54321,77777'). : ")
     return raw_zip_code_list_string
 
 

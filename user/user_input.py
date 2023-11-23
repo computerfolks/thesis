@@ -1,4 +1,10 @@
-from user.dates import collect_valid_start_and_end, days_between_dates, collect_valid_date, calc_end_date_from_start_date_and_interval_length
+import sys
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
+from user.dates import collect_valid_start_and_end, days_between_dates, collect_valid_date, calc_end_date_from_start_date_and_interval_length, is_valid_date
 from user.zips import collect_valid_zip_code_list
 
 max_query_cost = 100
@@ -25,7 +31,7 @@ def print_instruction_string_for_user_input():
 
         For this time interval, you can provide a list of zip codes to include in the data report.
           
-        Please note that your total number of days * zip codes must be less than {max_query_cost}.
+        Please note that your total number of (days * zip codes) must be less than {max_query_cost}.
         This is to reduce API costs. 
         For example, if you examine five zip codes and your time interval is 12 days, that would be a total of 60.
 
@@ -99,6 +105,12 @@ def get_date_range_keys_zip_codes_values_dictionary():
 
         # calculate end date based on start date and days in interval
         end_date = calc_end_date_from_start_date_and_interval_length(start_date, number_of_days_in_interval - 1)
+
+        # ensure end date is valid (for example, does not exceed max date)
+        valid = is_valid_date(end_date)
+        if valid is not True:
+            print(f"End date exceeds maximum date. Please enter an earlier start date.")
+            continue
         print(f"End date calculated as {end_date}")
 
         # get zip code list

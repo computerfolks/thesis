@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-from test_dictionary_pre_dataframe import test_dictionary_one, test_dictionary_two, test_dictionary_three, test_dictionary_four, test_dictionary_five, test_dictionary_six
+from plotting.test_dictionary_pre_dataframe import test_dictionary_one, test_dictionary_two, test_dictionary_three, test_dictionary_four, test_dictionary_five, test_dictionary_six
 from convert_to_dataframe import clean_convert_dictionary_to_dataframe
 from user.dates import days_between_dates
-from colors import assign_colors_to_dates
+from plotting.colors import assign_colors_to_dates
 import matplotlib.colors as mcolors
 import matplotlib.dates as mdates
 from datetime import datetime, timedelta
-from descriptors import descriptions_for_column_keys, graphable_columns
+from descriptors import descriptions_for_column_keys, graphable_columns, start_stations_to_zips
 
 # https://matplotlib.org/stable/api/markers_api.html
 # using the above link, choose the best markers
@@ -209,8 +209,8 @@ def plot_metric_by_single_interval(dataframe, metric):
     # marker dict is unneeded since only one start_date
     color_set_string, color_dict, line_set_string, line_dict, _, _ = assign_differentiators(unique_years, unique_zip_codes, set())
     
-    print(unique_interval_columns)
-    print(color_dict)
+    # print(unique_interval_columns)
+    # print(color_dict)
 
     start_date, end_date = None, None
     # iterate over the rows of the dataframe to plot intervals
@@ -220,8 +220,8 @@ def plot_metric_by_single_interval(dataframe, metric):
         start_date, end_date, zip_code = interval['start_date'], interval['end_date'], interval['zip_code']
         year = start_date.split('-')[0]
 
-        print(start_date)
-        print(end_date)
+        # print(start_date)
+        # print(end_date)
         # access the current data (full rows)
         interval_data = dataframe[(dataframe['start_date'] == start_date) & (dataframe['end_date'] == end_date) & (dataframe['zip_code'] == zip_code)]
 
