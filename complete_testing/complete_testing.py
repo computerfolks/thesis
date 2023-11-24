@@ -1,3 +1,10 @@
+"""
+this file contains all necessary functionality to test the package
+when able, other functions are imported
+when necessary, new functions were written to make start-to-finish testing functional
+"""
+
+
 import sys
 sys.path.append(".")
 from plotting.plot_one_metric import plot_metric_by_multiple_intervals, plot_metric_by_single_interval, get_formatted_date_without_year
@@ -80,10 +87,7 @@ def metric_to_plot(bike_rides_available):
 
 def ask_user_if_more_metrics():
     """
-    ask user if more metrics should be graphed, or if user wants program to exit
-
-    output:
-        T/F
+    ask user if more metrics should be graphed, or if user wants program to exit, output T/F
     """
     answer = input("To graph more metrics, type 'y' and press enter. Otherwise, type any other key and press enter: ")
     if answer.lower() == 'y':
@@ -93,6 +97,9 @@ def ask_user_if_more_metrics():
     
 
 def get_stats_from_training(train_val_csv, current_zip_code):
+    """
+    collect basic statistics for a zip code from training data
+    """
     train_val_df = pd.read_csv(train_val_csv, dtype={'zip_code': str})
     filtered_df = train_val_df[train_val_df['zip_code'] == current_zip_code]
     median_value = filtered_df[target].median()
@@ -102,14 +109,25 @@ def get_stats_from_training(train_val_csv, current_zip_code):
 
     
 def predict_real_example(df):
+    """
+    use saved model to predict values for each row
+    """
     with open('ml_learning/model.pkl', 'rb') as file:
+        # load model that was created and saved
         model = pickle.load(file)
+
+        # predictors
         x_val = df[selection_predictors]
+
         y_pred = model.predict(x_val)
         return y_pred
     
 
 def normalize_weather_dataframe(df):
+    """
+    a slice of normalize_weather_dataframe from ml_preprocessing/weather
+    only use the slice that is always true without any scaling
+    """
     # define normalization instructions
     columns_to_divide_by_100 = ['humidity', 'precipcover', 'cloudcover']
     columns_to_divide_by_10 = ['uvindex']
@@ -122,11 +140,21 @@ def normalize_weather_dataframe(df):
 
 
 def add_bike_rides(dataframe, n_train_val_csv, unnormalized_train_val_csv, zip_codes_list):
+    """
+    function to add bike ride predictions to the dataframe
+
+    input:
+        dataframe: the current weather dataframe
+        n_train_val_csv: the normalized csv that comes out of split.py which stores the training data
+        unnormalized_train_val_csv: the raw csv that comes out of dataframe.py before scaling
+        zip_codes_list: list of all zip codes in the dataframe
+    """
     # define empty columns
     dataframe['median'] = None
     dataframe['average'] = None
     dataframe['std'] = None
 
+    # use normalized to get the statistics, since normalized dataframe is used when z-score and percentile are calculated
     for current_zip_code in zip_codes_list:
         # for each zip code, collect median, standard dev, and average and add to the dataframe
         median, average, std = get_stats_from_training(n_train_val_csv, current_zip_code)
@@ -135,38 +163,35 @@ def add_bike_rides(dataframe, n_train_val_csv, unnormalized_train_val_csv, zip_c
         dataframe.loc[dataframe['zip_code'] == current_zip_code, 'average'] = average
         dataframe.loc[dataframe['zip_code'] == current_zip_code, 'std'] = std
 
+    # use unnormalized to report stats to user
     for current_zip_code in zip_codes_list:
         median, average, std = get_stats_from_training(unnormalized_train_val_csv, current_zip_code)
         print(f"Zip Code {current_zip_code} Median: {median}")
         print(f"Zip Code {current_zip_code} Average: {average}")
         print(f"Zip Code {current_zip_code} Standard Deviation: {std}")
-    print(dataframe)
 
-    # save dataframe to temp csv to fit method format
+    # save dataframe to temp csv to fit function format
     path = 'complete_testing/temp.csv'
     dataframe.to_csv(path, index=False)
 
     # transform dataframe by fitting on training
     trans_dataframe = fit_and_trans(unnormalized_train_val_csv, path, None, 'complete_testing/trans.csv', real_example=True)
 
-    print(trans_dataframe)
-
     # predict the 'number_of_rides'
     predictions = predict_real_example(trans_dataframe)
     trans_dataframe[target] = predictions
 
-    # collect z-scores
     # calculate the z-score for each value in the target column
     trans_dataframe['zscore'] = (trans_dataframe[target] - trans_dataframe['average']) / trans_dataframe['std']
-
-    print(trans_dataframe['zscore'])
 
     # calculate the z-score percentile using the cdf
     trans_dataframe['zscore_percentile'] = norm.cdf(trans_dataframe['zscore']) * 100
 
+    # use the saved scalers that were stored when running split.py
     for current_zip_code in zip_codes_list:
         with open(f'complete_testing/robust_scaler_{current_zip_code}.pkl', 'rb') as file:
             loaded_scaler = pickle.load(file)
+            # inverse_transform the target for the current zip code, numpy and reshape as needed
             trans_dataframe.loc[trans_dataframe['zip_code'] == current_zip_code, target] = loaded_scaler.inverse_transform(trans_dataframe.loc[trans_dataframe['zip_code'] == current_zip_code, target].to_numpy().reshape(-1, 1))
 
     # add the values found to the current dataframe that are relevant
@@ -178,52 +203,49 @@ def add_bike_rides(dataframe, n_train_val_csv, unnormalized_train_val_csv, zip_c
     return dataframe
 
 
+if __name__ == '__main__':
+    # collect user_dict of zip codes and intervals
+    user_dict = get_date_range_keys_zip_codes_values_dictionary()
 
+    # query for weather data
+    new_user_query_results = get_query_results_for_date_range_zip_codes_dict(user_dict)
 
+    # convert to dataframe
+    new_user_dataframe = clean_convert_dictionary_to_dataframe(new_user_query_results)
 
+    # normalize
+    new_user_dataframe = normalize_weather_dataframe(new_user_dataframe)
 
+    # determine if there is one interval of MM-DD or not
+    one_interval = has_one_interval(user_dict)
 
-# collect user_dict of zip codes and intervals
-user_dict = get_date_range_keys_zip_codes_values_dictionary()
-# print(user_dict)
+    # collect unique zip codes
+    zips = extract_zips(user_dict)
 
-# query for weather data
-new_user_query_results = get_query_results_for_date_range_zip_codes_dict(user_dict)
-# print(new_user_query_results)
+    # determine if bike_ride data is available (only true if all zips have been trained on)
+    bike_ride = bike_rides_available(zips)
 
-# convert to dataframe
-new_user_dataframe = clean_convert_dictionary_to_dataframe(new_user_query_results)
-
-# normalize
-new_user_dataframe = normalize_weather_dataframe(new_user_dataframe)
-
-# determine if there is one interval of MM-DD or not
-one_interval = has_one_interval(user_dict)
-
-# collect unique zip codes
-zips = extract_zips(user_dict)
-
-# determine if bike_ride data is available (only true if all zips have been trained on)
-bike_ride = bike_rides_available(zips)
-
-# plot as long as user wants more metrics plotted
-keep_plotting = True
-while(keep_plotting):
-    metric = metric_to_plot(bike_ride)
-    if metric == 'bikerides':
-        # use non-normalized to get proper metrics to report to user
-        new_user_dataframe = add_bike_rides(new_user_dataframe, 'ml_learning/n_fs_train_val.csv', 'ml_normalize/fs_train_val.csv', zips)
-        print(new_user_dataframe)
-    if one_interval:
-        if metric == 'bikerides':
-            plot_metric_by_single_interval(new_user_dataframe, 'number_of_rides')
-            plot_metric_by_single_interval(new_user_dataframe, 'zscore_percentile')
+    # ensure bike rides are only added once
+    bike_rides_already_added = False
+    # plot as long as user wants more metrics plotted
+    keep_plotting = True
+    
+    while(keep_plotting):
+        metric = metric_to_plot(bike_ride)
+        if metric == 'bikerides' and bike_rides_already_added is False:
+            # use non-normalized to get proper metrics to report to user
+            new_user_dataframe = add_bike_rides(new_user_dataframe, 'ml_learning/n_fs_train_val.csv', 'ml_normalize/fs_train_val.csv', zips)
+            bike_rides_already_added = True
+        if one_interval:
+            if metric == 'bikerides':
+                plot_metric_by_single_interval(new_user_dataframe, 'number_of_rides')
+                plot_metric_by_single_interval(new_user_dataframe, 'zscore_percentile')
+            else:
+                plot_metric_by_single_interval(new_user_dataframe, metric)
         else:
-            plot_metric_by_single_interval(new_user_dataframe, metric)
-    else:
-        if metric == 'bikerides':
-            plot_metric_by_multiple_intervals(new_user_dataframe, 'number_of_rides')
-            plot_metric_by_multiple_intervals(new_user_dataframe, 'zscore_percentile')
-        else:
-            plot_metric_by_multiple_intervals(new_user_dataframe, metric)
-    keep_plotting = ask_user_if_more_metrics()
+            if metric == 'bikerides':
+                plot_metric_by_multiple_intervals(new_user_dataframe, 'number_of_rides')
+                plot_metric_by_multiple_intervals(new_user_dataframe, 'zscore_percentile')
+            else:
+                plot_metric_by_multiple_intervals(new_user_dataframe, metric)
+        keep_plotting = ask_user_if_more_metrics()

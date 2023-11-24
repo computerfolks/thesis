@@ -56,7 +56,12 @@ def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv, real_example=F
     input:
         fit_csv: file with dataframe to fit the standardizers and transform
         trans_csv: file with dataframe to be transformed only
-        new_fit_csv, new_trans_csv: normalized csvs
+        new_fit_csv, new_trans_csv: normalized csvs (can be None if no new saving is needed, like in real test case)
+        real_example: False by default. if the trans_csv represents a real life test case or just a full testing dataframe with biking loaded
+        Whether it is a real_example or not affects if target can be scaled (because it is already present), among other factors
+
+    output:
+        trans_df: only needed in real test case
     """
 
     fit_df = pd.read_csv(fit_csv, dtype={'zip_code': str})
@@ -77,6 +82,7 @@ def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv, real_example=F
     fit_df[columns_to_min_max_scale] = scaler_min_max.transform(fit_df[columns_to_min_max_scale])
     trans_df[columns_to_min_max_scale] = scaler_min_max.transform(trans_df[columns_to_min_max_scale])
 
+    # if it is a live test case
     if real_example:
         columns_to_zip_standardize = ['number_of_rides']
         zip_codes = start_stations_to_zips.values()
@@ -84,18 +90,16 @@ def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv, real_example=F
         for zip_code in zip_codes:
             # get rows to standardize
             zip_code_rows_fit = fit_df[fit_df['zip_code'] == zip_code]
-
-            # scaler_zip = StandardScaler()
-            # I tried using standardscaler but got back awful results, switched to robustscaler and performance significantly improved
-            scaler_zip = RobustScaler()
-
+            
             # fit and transform fit_df
+            scaler_zip = RobustScaler()
             fit_df.loc[fit_df['zip_code'] == zip_code, columns_to_zip_standardize] = scaler_zip.fit_transform(zip_code_rows_fit[columns_to_zip_standardize])
 
             # save output for when real examples are encountered in future
-            with open(f'complete_testing/robust_scaler_{zip_code}.pkl', 'wb') as file:
+            with open('complete_testing/robust_scaler.pkl', 'wb') as file:
                 pickle.dump(scaler_zip, file)
                 print("success")
+    
     else:
         # target features need to be standardized each on their own zip code
         # to accommadate for some stations always having larger number of rides and minutes
@@ -114,11 +118,6 @@ def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv, real_example=F
 
             # fit and transform fit_df
             fit_df.loc[fit_df['zip_code'] == zip_code, columns_to_zip_standardize] = scaler_zip.fit_transform(zip_code_rows_fit[columns_to_zip_standardize])
-
-            # save output for when real examples are encountered in future
-            with open('complete_testing/robust_scaler.pkl', 'wb') as file:
-                pickle.dump(scaler_zip, file)
-                print("success")
 
             # transform trans_df
             trans_df.loc[trans_df['zip_code'] == zip_code, columns_to_zip_standardize] = scaler_zip.transform(zip_code_rows_trans[columns_to_zip_standardize])
