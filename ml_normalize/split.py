@@ -9,7 +9,7 @@ import pickle
 
 def split_dataframes(input_csv, output_prefix = ''):
     """
-    transform full dataframe at location input_csv into train_val and test dataframes
+    transform full dataframe at location input_csv into all needed dataframes including train, val, train_val, test, all of feature selection, etc
     output_prefix can optionally prepend to the generic csv names
     """
     # collect full dataframe
@@ -57,8 +57,8 @@ def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv, real_example=F
         fit_csv: file with dataframe to fit the standardizers and transform
         trans_csv: file with dataframe to be transformed only
         new_fit_csv, new_trans_csv: normalized csvs (can be None if no new saving is needed, like in real test case)
-        real_example: False by default. if the trans_csv represents a real life test case or just a full testing dataframe with biking loaded
-        Whether it is a real_example or not affects if target can be scaled (because it is already present), among other factors
+        real_example: False by default. indicates if the trans_csv represents a real life test case, else just a full testing dataframe with biking loaded
+            note: whether it is a real_example or not affects if target can be scaled (because it is already present), among other factors
 
     output:
         trans_df: only needed in real test case
@@ -126,9 +126,6 @@ def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv, real_example=F
         fit_df.to_csv(new_fit_csv, index=False)
     if new_trans_csv is not None:
         trans_df.to_csv(new_trans_csv, index=False)
-    print("IN SPLIT")
-    print(fit_df)
-    print(trans_df)
     return trans_df
 
 def remove_anomalies(train_val_csv):
@@ -189,8 +186,12 @@ if __name__ == '__main__':
     new_fs_val_csv = 'ml_learning/n_fs_val.csv'
     new_fs_train_val_csv = 'ml_learning/n_fs_train_val.csv'
 
+    # fit on train, transform on val to prevent data leakage during training and tuning based on val performance
     fit_and_trans(fs_train_csv, fs_val_csv, new_fs_train_csv, new_fs_val_csv)
     remove_anomalies(new_fs_train_csv)
+
+    # for feature selection, 'tune' and 'train_val' just need to fit and transform on themselves
+    # there is no separate 'test' for feature selection, since it uses the 'test' which is fit on the full train + val + tune
     fit_and_trans(fs_tune_csv, fs_tune_csv, new_fs_tune_csv, new_fs_tune_csv)
     remove_anomalies(new_fs_tune_csv)
     fit_and_trans(fs_train_val_csv, fs_train_val_csv, new_fs_train_val_csv, new_fs_train_val_csv)
