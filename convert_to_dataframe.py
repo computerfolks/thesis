@@ -3,7 +3,7 @@ from plotting.test_dictionary_pre_dataframe import test_dictionary_one
 
 def convert_dictionary_to_dataframe(total_dictionary_results):
     """
-    converts a dictionary of results into a pandas DataFrame, where each row is a date for a given location within the date range.
+    converts a dictionary of results into a pandas DataFrame, where each row is a single date for a given location within the date range.
 
     input:
         total_dictionary_results = {
@@ -48,7 +48,7 @@ def convert_dictionary_to_dataframe(total_dictionary_results):
         # loop through each individual date
         for day_dictionary in interval_location_dictionary:
 
-            # initialize dataframe with column names
+            # initialize dataframe with column names if have not done so already
             if dataframe is None:
                 columns = ['start_date', 'end_date', 'zip_code'] + list(day_dictionary.keys())
                 dataframe = pd.DataFrame(columns=columns)
@@ -56,22 +56,18 @@ def convert_dictionary_to_dataframe(total_dictionary_results):
             # include start_date, end_date, and zip_code
             row_values = [start_date, end_date, zip_code] 
 
-            # include all other values in the dictionary, only attempt to access from columns[3:] onwards to skip over start_date, end_date, zip_code
+            # include all other values in the dictionary, but only attempt to access from columns[3:] onwards to skip over start_date, end_date, zip_code
             row_values.extend([day_dictionary[column] if column in day_dictionary else None for column in dataframe.columns[3:]])
 
             # save row values
             dataframe.loc[len(dataframe)] = row_values
-
-    # testing purposes
-    # for col in dataframe.columns:
-    #     print(dataframe[col])
 
     return dataframe
 
 
 def clean_convert_dictionary_to_dataframe(total_dictionary_results):
     """
-    call convert_dictionary_to_dataframe, clean up output to remove extra columns listed in columns_to_drop
+    call convert_dictionary_to_dataframe, clean up output to add daylight and remove extra columns listed in columns_to_drop
     """
     raw_dataframe = convert_dictionary_to_dataframe(total_dictionary_results)
 
@@ -83,8 +79,6 @@ def clean_convert_dictionary_to_dataframe(total_dictionary_results):
     
     # create new dataframe with dropped columns
     clean_dataframe = raw_dataframe.drop(columns=columns_to_drop, errors='ignore')
-
-    print(clean_dataframe.columns)
 
     return clean_dataframe
 
