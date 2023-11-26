@@ -123,7 +123,7 @@ def predict_real_example(df):
         return y_pred
     
 
-def normalize_weather_dataframe(df):
+def normalize_weather_dataframe_always_true(df):
     """
     a slice of normalize_weather_dataframe from ml_preprocessing/weather
     only use the slice that is always true without any scaling
@@ -173,6 +173,7 @@ def add_bike_rides(dataframe, n_train_val_csv, unnormalized_train_val_csv, zip_c
 
     # save dataframe to temp csv to fit function format
     path = 'complete_testing/temp.csv'
+    normalized_always_true_dataframe = normalize_weather_dataframe_always_true(dataframe.copy(deep = True))
     dataframe.to_csv(path, index=False)
 
     # transform dataframe by fitting on training
@@ -208,15 +209,6 @@ if __name__ == '__main__':
     # collect user_dict of zip codes and intervals
     user_dict = get_date_range_keys_zip_codes_values_dictionary()
 
-    # query for weather data
-    new_user_query_results = get_query_results_for_date_range_zip_codes_dict(user_dict)
-
-    # convert to dataframe
-    new_user_dataframe = clean_convert_dictionary_to_dataframe(new_user_query_results)
-
-    # normalize
-    new_user_dataframe = normalize_weather_dataframe(new_user_dataframe)
-
     # determine if there is one interval of MM-DD or not
     one_interval = has_one_interval(user_dict)
 
@@ -225,6 +217,12 @@ if __name__ == '__main__':
 
     # determine if bike_ride data is available (only true if all zips have been trained on)
     bike_ride = bike_rides_available(zips)
+
+    # query for weather data
+    new_user_query_results = get_query_results_for_date_range_zip_codes_dict(user_dict)
+
+    # convert to dataframe
+    new_user_dataframe = clean_convert_dictionary_to_dataframe(new_user_query_results)
 
     # ensure bike rides are only added once
     bike_rides_already_added = False

@@ -95,10 +95,10 @@ def fit_and_trans(fit_csv, trans_csv, new_fit_csv, new_trans_csv, real_example=F
             scaler_zip = RobustScaler()
             fit_df.loc[fit_df['zip_code'] == zip_code, columns_to_zip_standardize] = scaler_zip.fit_transform(zip_code_rows_fit[columns_to_zip_standardize])
 
-            # save output for when real examples are encountered in future
-            with open('complete_testing/robust_scaler.pkl', 'wb') as file:
-                pickle.dump(scaler_zip, file)
-                print("success")
+            # save output for when real examples are encountered in future - only needs to be done once
+            # with open(f'complete_testing/robust_scaler_{zip_code}.pkl', 'wb') as file:
+            #     pickle.dump(scaler_zip, file)
+            #     print("success")
     
     else:
         # target features need to be standardized each on their own zip code
