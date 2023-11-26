@@ -1,3 +1,7 @@
+"""
+This file is used to run all models using each type of predictor on validation data to see performance and choose the best model
+"""
+
 import sys
 sys.path.append(".")
 from descriptors import all_predictors, domain_predictors, baseline_predictors, selection_predictors, random_seed

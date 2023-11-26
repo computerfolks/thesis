@@ -1,3 +1,7 @@
+"""
+This file contains all functionality needed to plot data in this project
+"""
+
 import sys
 sys.path.append(".")
 import matplotlib.pyplot as plt

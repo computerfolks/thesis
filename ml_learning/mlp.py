@@ -1,3 +1,7 @@
+"""
+This file contains the multilayer perceptron implementation
+"""
+
 import sys
 sys.path.append(".")
 from sklearn.neural_network import MLPRegressor

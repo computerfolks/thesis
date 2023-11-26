@@ -1,3 +1,7 @@
+"""
+This file is used to convert raw API output into a usable dataframe
+"""
+
 import pandas as pd
 from plotting.test_dictionary_pre_dataframe import test_dictionary_one
 

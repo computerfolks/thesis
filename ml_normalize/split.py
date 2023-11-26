@@ -1,3 +1,7 @@
+"""
+This file is responsible for transforming a single large dataframe into smaller cuts, as well properly fitting and transforming the dataframes
+"""
+
 import sys
 sys.path.append(".")
 from sklearn.model_selection import train_test_split

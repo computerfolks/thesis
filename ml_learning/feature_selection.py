@@ -1,6 +1,6 @@
 """
 this file was used as the basis for featuer selection
-features were still manually selected by domain expert, but based on correlations in this file
+features were still manually selected by domain expert, but selections were based on output of this file
 """
 
 import sys

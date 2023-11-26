@@ -1,3 +1,7 @@
+"""
+This file contains all functions associated with collecting 'dates' from users
+"""
+
 from datetime import datetime, date, timedelta
 
 def ask_user_for_date(start_or_end):

@@ -36,7 +36,7 @@ I then ran 'ml_learning/feature_selection' and viewed the correlation matrix. I 
 
 Finally, I ran 'ml_learning/runmodels.py'. This file leverages all models built in 'ml_learning/' by performing hyperparameter search for each on the train_validation, then training on train, and then testing on validation. The result for each model on each predictor is saved to a .txt file to be read by the user. 
 
-I then tested the best performing model on the test data as well as the best performing baseline model on the test data. Results are reported below.
+I then tested the best performing model from validation testing on the test data as well as the best performing baseline model from validation on the test data. Results are reported below.
 * Optimal Baseline Model
 	* Model Type: Random Forest
 	* Performance on Test Data: r^2 = 0.491
@@ -47,4 +47,6 @@ I then tested the best performing model on the test data as well as the best per
 
 I saved the results of the best performing model into a pickle file. This pickle file is opened and used when future test cases are encountered. Importantly, when real life test cases are encountered, they are also transformed based on the fit of the training_validation dataset, which was also saved into a pickle during training. 
 
-
+## Folders
+Each file has a docstring which explains its purpose. I will explain briefly what each folder represents.
+* 

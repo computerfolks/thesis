@@ -1,3 +1,7 @@
+"""
+This file contains all functions associated with collecting dates and zip codes from users
+"""
+
 import sys
 sys.path.append(".")
 from user.dates import collect_valid_start_and_end, days_between_dates, collect_valid_date, calc_end_date_from_start_date_and_interval_length, is_valid_date

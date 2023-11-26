@@ -1,3 +1,7 @@
+"""
+This file contains the random forest implementation
+"""
+
 import sys
 sys.path.append(".")
 from sklearn.ensemble import RandomForestRegressor

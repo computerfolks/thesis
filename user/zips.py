@@ -1,3 +1,7 @@
+"""
+This file contains all functions associated with collecting 'zip codes' from users
+"""
+
 import sys
 sys.path.append(".")
 import json

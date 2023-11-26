@@ -1,3 +1,7 @@
+"""
+This file is used to make the API call
+"""
+
 import urllib.request
 import json
 

@@ -1,3 +1,7 @@
+"""
+This file stores global parameters / variables used across all functions
+"""
+
 # store dictionary to be imported which maps pandas dataframe column names to English explanation
 descriptions_for_column_keys = {
     'start_date': 'Starting date of data',

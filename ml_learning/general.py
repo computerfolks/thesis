@@ -1,3 +1,7 @@
+"""
+This file contains generic hyperparam and predict functions, which can be called by more specific machine learning modules
+"""
+
 import sys
 sys.path.append(".")
 import pandas as pd

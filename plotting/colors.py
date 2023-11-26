@@ -1,3 +1,7 @@
+"""
+This file contains the function needed to apply a color gradient to dates
+"""
+
 import sys
 sys.path.append(".")
 import matplotlib.pyplot as plt

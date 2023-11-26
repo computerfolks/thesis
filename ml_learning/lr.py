@@ -1,3 +1,7 @@
+"""
+This file contains the linear regression implementation
+"""
+
 import sys
 sys.path.append(".")
 from sklearn.model_selection import GridSearchCV
