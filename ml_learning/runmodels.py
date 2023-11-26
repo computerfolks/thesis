@@ -11,6 +11,21 @@ from sklearn.ensemble import RandomForestRegressor
 target = 'number_of_rides'
 
 def test_all_models(predictors, predictors_description, train_val_csv, train_csv, test_csv):
+    """
+    this function is used to run all models with all lists of predictors on validation data using training data
+    the best performing model (and only that model) was then tested on test data and reported
+    output is saved into a file for easy analysis
+
+    input:
+        predictors: list of columns to be used for training
+        predictors_description: description in English for each model
+        train_val_csv: csv where the training / validation combined dataset is located
+        train_csv, val_csv: csv where the training / validation dataset is located
+        
+    
+    output:
+        performance saved into a file for analysis
+    """
     scores = {}
 
     # multilayer perceptron

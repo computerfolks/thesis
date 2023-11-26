@@ -20,9 +20,10 @@ def lr_predict(train_val_csv, train_csv, val_csv, target, linear_model, predicto
         train_csv, val_csv: csv where the training / validation dataset is located
         target: the target variable to predict
         linear_model: a scikitlearn linear model already initialized
+        predictors: list of columns to be used for training
 
     output:
-        score: the performance of trained model on validation data
+        score: the performance of trained model on validation data based on 'r2' scoring
     """
     # set hyperparameters to search through
     hyper_param_space = {'alpha': 10**np.linspace(1,-3,50)*0.5}

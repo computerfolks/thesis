@@ -1,3 +1,8 @@
+"""
+prelimimary experimentation of PCA - determined to be unhelpful in this instance and scrapped
+UNUSED FOR FINAL RESULTS
+"""
+
 import sys
 sys.path.append(".")
 from sklearn.linear_model import ElasticNet

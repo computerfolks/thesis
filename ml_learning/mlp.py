@@ -17,6 +17,7 @@ def find_mlp_optimal_hyperparams(train_val_csv, target, predictors):
     input:
         train_val_csv: csv where the training / validation combined dataset is located
         target: the target variable to predict
+        predictors: list of columns to be used for training
 
     output:
         best_params: the optimal hyperparameters found by find_optimal_hyperparams
@@ -54,6 +55,8 @@ def mlp_predict(train_csv, val_csv, target, predictors, hyperparams=None):
         train_csv: file that has the training data
         val_csv: file that has the validation data
         target: variable to predict
+        predictors: list of columns to be used for training
+        hyperparams: already determined hyperparams
     
     output:
         score: the performance of trained model on validation data
@@ -63,10 +66,8 @@ def mlp_predict(train_csv, val_csv, target, predictors, hyperparams=None):
         hidden_layer_sizes = hyperparams['hidden_layer_sizes']
         learning_rate_init = hyperparams['learning_rate_init']
     else:
-        # hidden_layer_sizes = (200, 200, 200, 200, 200)
-        # learning_rate_init = 0.001  
-        hidden_layer_sizes = (10, 10, 10, 10)
-        learning_rate_init = 0.01 
+        hidden_layer_sizes = (200, 200, 200, 200, 200)
+        learning_rate_init = 0.001  
 
     # define initial model
     regr = MLPRegressor(random_state=random_seed, max_iter=40000, hidden_layer_sizes=hidden_layer_sizes, learning_rate_init=learning_rate_init)
