@@ -22,8 +22,7 @@ def assign_colors_to_dates(date_set):
     min_date = datetime.strptime(date_list[0], '%m-%d')
     max_date = datetime.strptime(date_list[-1], '%m-%d')
 
-    # https://matplotlib.org/stable/gallery/color/colormap_reference.html
-    # gradient choice still TBD
+    # gradient choices: https://matplotlib.org/stable/gallery/color/colormap_reference.html
     cmap = plt.cm.get_cmap('cool')
 
     # plot according to min being 0, max being days between min and max dates
@@ -41,7 +40,7 @@ def assign_colors_to_dates(date_set):
 
 # testing
 if __name__ == '__main__':
-  dates = {'2021-01-01', '2023-01-01', '2023-02-01', '2023-03-01', '2023-10-01'}
+  dates = {'01-01', '01-01', '02-01', '03-01', '10-01'}
   color_dict = assign_colors_to_dates(dates)
 
   # plot for testing, very basic

@@ -2,7 +2,7 @@ import sys
 sys.path.append(".")
 import matplotlib.pyplot as plt
 import pandas as pd
-from plotting.test_dictionary_pre_dataframe import test_dictionary_one, test_dictionary_two, test_dictionary_three, test_dictionary_four, test_dictionary_five, test_dictionary_six
+from plotting.test_dictionary_pre_dataframe import test_dictionary_eight, test_dictionary_two, test_dictionary_three, test_dictionary_four, test_dictionary_nine, test_dictionary_five
 from convert_to_dataframe import clean_convert_dictionary_to_dataframe
 from user.dates import days_between_dates
 from plotting.colors import assign_colors_to_dates
@@ -396,13 +396,11 @@ if __name__ == '__main__':
     plot_metric_by_single_interval(test_dataframe_two, 'temp')
     test_dataframe_three = clean_convert_dictionary_to_dataframe(test_dictionary_three)
     plot_metric_by_single_interval(test_dataframe_three, 'feelslikemax')
-    test_dataframe_one = clean_convert_dictionary_to_dataframe(test_dictionary_one)
-    plot_metric_by_multiple_intervals(test_dataframe_one, 'daylight')
-    # test_dataframe_four = clean_convert_dictionary_to_dataframe(test_dictionary_four)
-    # for metric in descriptions_for_column_keys.keys():
-    #     if metric in graphable_columns:
-    #         plot_metric_by_single_interval(test_dataframe_four, metric)
-    # test_dataframe_five = clean_convert_dictionary_to_dataframe(test_dictionary_five)
-    # plot_metric_by_single_interval(test_dataframe_five, 'daylight')
-    # test_dataframe_six = clean_convert_dictionary_to_dataframe(test_dictionary_six)
-    # plot_metric_by_single_interval(test_dataframe_six, 'daylight')
+    test_dataframe_eight = clean_convert_dictionary_to_dataframe(test_dictionary_eight)
+    plot_metric_by_multiple_intervals(test_dataframe_eight, 'dew')
+    test_dataframe_four = clean_convert_dictionary_to_dataframe(test_dictionary_four)
+    plot_metric_by_single_interval(test_dataframe_four, 'windspeed')
+    test_dataframe_five = clean_convert_dictionary_to_dataframe(test_dictionary_five)
+    plot_metric_by_single_interval(test_dataframe_five, 'humidity')
+    test_dataframe_nine = clean_convert_dictionary_to_dataframe(test_dictionary_nine)
+    plot_metric_by_multiple_intervals(test_dataframe_nine, 'tempmin')
