@@ -4,7 +4,7 @@ descriptions_for_column_keys = {
     'end_date': 'Ending date of data',
     'zip_code': 'Zip code location',
     'datetime': 'Date and time of data',
-    'daylight': 'Seconds of daylight',
+    'daylight': 'Seconds between sunrise and sunset',
     'tempmax': 'Maximum temperature',
     'tempmin': 'Minimum temperature',
     'temp': 'Average temperature',
