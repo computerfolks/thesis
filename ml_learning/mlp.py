@@ -4,7 +4,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import make_scorer, mean_squared_error, r2_score
 import pandas as pd
-from descriptors import selection_predictors, targets, random_seed
+from descriptors import selection_predictors, random_seed
 from general import find_optimal_hyperparams, predict
 
 predictors = selection_predictors

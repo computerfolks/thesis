@@ -34,7 +34,8 @@ descriptions_for_column_keys = {
     'zscore_percentile': 'Percentile score for expected activity'
 }
 
-# columns that can be graphed by matplotlib
+# columns that can always be graphed by matplotlib
+# NOTE: if the weather dataframe is missing some of this data due to collection being unavailable, the graph may appear strange
 graphable_columns = [
     'daylight',
     'tempmax',
@@ -66,17 +67,19 @@ start_stations_to_zips = {
     'Marin Light Rail' : '07302'
 }
 
-# predictor list for machine learning
+# predictor lists used for machine learning
+
+# use all available metrics as predictors
 all_predictors = ['tempmax','tempmin','temp','feelslikemax','feelslikemin','feelslike','dew','humidity','precip','precipcover','snow','snowdepth','windgust','windspeed','pressure','cloudcover','visibility','solarradiation','solarenergy','uvindex','daylight','is_work_day']
+
+# the 'domain expert' metrics chosen that are thought to be most predictive without using the data for feature selection
 domain_predictors = ['temp','humidity','precip','snow','snowdepth','windspeed','pressure','cloudcover','visibility','daylight', 'is_work_day']
+
+# predictors for a baseline model which does not account for weather, used for comparison purposes
 baseline_predictors = ['daylight','is_work_day']
+
+# predictors as determined by performing feature selection
 selection_predictors = ['temp','precip','precipcover','windspeed','cloudcover','visibility','uvindex','daylight']
 
-targets = ['number_of_rides', 'total_length']
-target = 'number_of_rides'
-
-# random seed for training
+# random seed for scikitlearn functions that have the option
 random_seed = 23907251
-
-# scoring system, can be 'r2' or 'neg_mean_squared_error', among others. To see full list, put in a random string and allowed values will be printed to terminal
-scoring = 'r2'

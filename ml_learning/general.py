@@ -2,7 +2,6 @@ import sys
 sys.path.append(".")
 import pandas as pd
 from sklearn.model_selection import GridSearchCV
-from descriptors import scoring
 import pickle
 
 def find_optimal_hyperparams(train_val_csv, target, hyper_param_space, initialized_model, predictors):
@@ -21,6 +20,8 @@ def find_optimal_hyperparams(train_val_csv, target, hyper_param_space, initializ
     """
     # read csv
     train_val_df = pd.read_csv(train_val_csv, dtype={'zip_code': str})
+
+    scoring = 'r2'
 
     hyper_search = GridSearchCV(
         estimator = initialized_model,

@@ -3,7 +3,7 @@ sys.path.append(".")
 from sklearn.linear_model import ElasticNet
 from sklearn.decomposition import PCA
 import pandas as pd
-from descriptors import predictors, targets, random_seed
+from descriptors import predictors, random_seed
 
 train_val_csv = 'ml_learning/n_train_val.csv'
 train_csv = 'ml_learning/n_train.csv'

@@ -142,6 +142,7 @@ def normalize_weather_dataframe(df):
 def add_bike_rides(dataframe, n_train_val_csv, unnormalized_train_val_csv, zip_codes_list):
     """
     function to add bike ride predictions to the dataframe
+    NOTE: missing weather data due to collection errors will lead to exceptions and exiting
 
     input:
         dataframe: the current weather dataframe

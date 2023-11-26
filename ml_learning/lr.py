@@ -3,7 +3,7 @@ sys.path.append(".")
 from sklearn.model_selection import GridSearchCV
 import pandas as pd
 import numpy as np
-from descriptors import baseline_predictors, targets, random_seed
+from descriptors import baseline_predictors, random_seed
 from sklearn.linear_model import ElasticNet, Ridge, Lasso, HuberRegressor, LinearRegression
 from sklearn.svm import LinearSVR
 from general import find_optimal_hyperparams, predict
