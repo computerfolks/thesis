@@ -1,5 +1,5 @@
 """
-This file is responsible for transforming a single large dataframe into smaller cuts, as well properly fitting and transforming the dataframes
+This file is responsible for transforming a single large dataframe into smaller cuts, as well properly fitting and transforming the dataframes 
 """
 
 import sys
