@@ -49,4 +49,9 @@ I saved the results of the best performing model into a pickle file. This pickle
 
 ## Folders
 Each file has a docstring which explains its purpose. I will explain briefly what each folder represents.
-* 
+* user: collect clean user input for date ranges and zip codes
+* plotting: plot weather data
+* ml_preprocessing: convert raw bike data and weather data into one dataframe
+* ml_normalize: split large dataframe into datasets, and then fit, transform, and remove anomalies as appropriate
+* ml_learning: train and test machine learning models, as well as perform feature selection
+* complete_testing: interact with user and allow them to request date ranges and zip codes and then plot weather and bike data
