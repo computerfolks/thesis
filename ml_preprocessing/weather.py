@@ -34,8 +34,6 @@ def normalize_weather_dataframe(input_json, output_csv):
   query_raw_result = {raw_key:raw_value}
 
   weather_dataframe = clean_convert_dictionary_to_dataframe(query_raw_result)
-  # print(weather_dataframe.columns)
-  # print(weather_dataframe)
 
   # remove columns
   weather_dataframe = weather_dataframe.drop(['start_date', 'end_date', 'winddir', 'severerisk', 'sunrise', 'sunset', 'moonphase'], axis=1)
