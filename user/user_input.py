@@ -2,8 +2,7 @@ import sys
 sys.path.append(".")
 from user.dates import collect_valid_start_and_end, days_between_dates, collect_valid_date, calc_end_date_from_start_date_and_interval_length, is_valid_date
 from user.zips import collect_valid_zip_code_list
-
-max_query_cost = 100
+from descriptors import max_query_cost
 
 def ask_user_if_more_intervals():
     """
@@ -100,11 +99,9 @@ def get_date_range_keys_zip_codes_values_dictionary():
         start_date = collect_valid_date("start")
 
         # calculate end date based on start date and days in interval
+        # will return None if end date is invalid (caused by start date being too late)
         end_date = calc_end_date_from_start_date_and_interval_length(start_date, number_of_days_in_interval - 1)
-
-        # ensure end date is valid (for example, does not exceed max date)
-        valid = is_valid_date(end_date)
-        if valid is not True:
+        if end_date is None:
             print(f"End date exceeds maximum date. Please enter an earlier start date.")
             continue
         print(f"End date calculated as {end_date}")
@@ -136,6 +133,8 @@ def get_date_range_keys_zip_codes_values_dictionary():
                 # avoid adding duplicates
                 if zip_code in current_zip_list:
                     print(f"{zip_code} already requested for date range {start_date}, {end_date} and will be ignored")
+                    total_query_cost -= number_of_days_in_interval
+                    print(f"Current query total cost {total_query_cost} out of {max_query_cost}")
                 
                 else:
                     current_zip_list.append(zip_code)

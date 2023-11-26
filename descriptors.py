@@ -83,3 +83,6 @@ selection_predictors = ['temp','precip','precipcover','windspeed','cloudcover','
 
 # random seed for scikitlearn functions that have the option
 random_seed = 23907251
+
+# max query cost allowed for a user. 1000 credits available per day.
+max_query_cost = 100

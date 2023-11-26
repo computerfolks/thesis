@@ -24,7 +24,8 @@ def is_valid_date(raw_date_string):
         raw_date_string: string to be examined
     
     output:
-        T/F
+        return T/F
+        exceptions return F
     """
     date_format = "%Y-%m-%d"
     try:
@@ -51,7 +52,7 @@ def is_valid_date(raw_date_string):
 
 def collect_valid_date(start_or_end):
     """
-    call on other functions, return valid date
+    call on other functions to return valid date
 
     input:
         start_or_end: a string of value "start" or "end", used to prompt the user
@@ -98,7 +99,6 @@ def is_valid_start_and_end_dates_pair(start_valid_date, end_valid_date):
     """
     verify that the pair of start date and end date are valid together
     to be valid together, the dates must be in the correct order chronologically
-    and also cannot be more than max_query_cost apart (global parameter)
 
     input:
         start_valid_date, end_valid_date: valid dates
@@ -146,19 +146,25 @@ def collect_valid_start_and_end():
 def calc_end_date_from_start_date_and_interval_length(start_date, number_of_days_in_interval):
     """
     function which calculates the end date based on the start date and number of days to add
+    also ensures end date is valid
 
     input:
         start_date: starting date in correct format
         number_of_days_in_interval: number of days between start and end dates
 
     output:
-        end_date
+        end_date if success
+        None if failure
     """
     date_format = "%Y-%m-%d"
     try:
         start_date_obj = datetime.strptime(start_date, date_format)
         end_date_obj = start_date_obj + timedelta(days=number_of_days_in_interval)
-        return end_date_obj.strftime(date_format)
+        end_date = end_date_obj.strftime(date_format)
+        if is_valid_date(end_date) is False:
+            print(f"Calculated end date {end_date} is invalid - likely due to exceeding maximum date.")
+            return None
+        return end_date
     except ValueError as e:
         print(f"Error: {e}")
         return None
