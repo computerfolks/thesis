@@ -7,6 +7,7 @@ sys.path.append(".")
 import pandas as pd
 from sklearn.model_selection import GridSearchCV
 import pickle
+from sklearn.metrics import mean_squared_error
 
 def find_optimal_hyperparams(train_val_csv, target, hyper_param_space, initialized_model, predictors):
     """
@@ -25,8 +26,8 @@ def find_optimal_hyperparams(train_val_csv, target, hyper_param_space, initializ
     # read csv
     train_val_df = pd.read_csv(train_val_csv, dtype={'zip_code': str})
 
-    # define scoring, can be 'r2' or many other options, to view options enter invalid string and scikitlearn will print all options
-    scoring = 'r2'
+    # define scoring, can be 'r2' or 'neg_mean_squared_error' or many other options, to view options enter invalid string and scikitlearn will print all options
+    scoring = 'neg_mean_squared_error'
 
     hyper_search = GridSearchCV(
         estimator = initialized_model,
@@ -70,5 +71,10 @@ def predict(train_csv, val_csv, target, initialized_model, predictors):
     x_val = val_df[predictors]
     y_val = val_df[target]
 
-    score = initialized_model.score(x_val, y_val)
+    # for R^2
+    # score = initialized_model.score(x_val, y_val)
+
+    # for MSE
+    y_pred = initialized_model.predict(x_val)
+    score = mean_squared_error(y_pred, y_val)
     return score
