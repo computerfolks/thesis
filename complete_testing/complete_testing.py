@@ -174,7 +174,7 @@ def add_bike_rides(dataframe, n_train_val_csv, unnormalized_train_val_csv, zip_c
     # save dataframe to temp csv to fit function format
     path = 'complete_testing/temp.csv'
     normalized_always_true_dataframe = normalize_weather_dataframe_always_true(dataframe.copy(deep = True))
-    dataframe.to_csv(path, index=False)
+    normalized_always_true_dataframe.to_csv(path, index=False)
 
     # transform dataframe by fitting on training
     trans_dataframe = fit_and_trans(unnormalized_train_val_csv, path, None, 'complete_testing/trans.csv', real_example=True)
