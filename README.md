@@ -56,7 +56,7 @@ I saved the results of the best performing model into a pickle file. This pickle
 
 ## Folders
 
-Each file has a docstring which explains its purpose. I will explain briefly what each folder represents.
+Each file has a docstring that explains its purpose. I will explain briefly what each folder represents.
 
 - user: collect clean user input for date ranges and zip codes
 - plotting: plot weather data
